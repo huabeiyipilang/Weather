@@ -10,11 +10,10 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_margin="2dp"
         android:layout_weight="1"
-        android:background="#99000000"
-        android:gravity="center_vertical"
-        android:padding="2dp" >
+        android:background="@android:drawable/dialog_frame"
+        android:alpha="0.7"
+        android:gravity="center_vertical">
 
         <TextView
             android:id="@+id/tv_city_name"
@@ -61,7 +60,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_margin="2dp"
-        android:layout_weight="3"
+        android:layout_weight="6"
         android:orientation="vertical"
         android:padding="2dp" >
 
@@ -77,7 +76,7 @@
                 android:layout_weight="1"
                 android:gravity="right"
                 android:text="@string/unknown"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
+                android:textSize="60sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -89,6 +88,7 @@
                 android:id="@+id/current_weather"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+            	android:textAppearance="?android:attr/textAppearanceMedium" 
                 android:text="@string/unknown" />
 
             <TextView
@@ -96,6 +96,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
+            	android:textAppearance="?android:attr/textAppearanceMedium" 
                 android:text="@string/unknown" />
         </LinearLayout>
     </LinearLayout>
@@ -103,35 +104,11 @@
     <!-- weathers -->
 
     <LinearLayout
+        android:id="@+id/ll_preview_container"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="3" >
+        android:layout_weight="4" >
 
-        <!-- 1st day weather -->
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_margin="2dp"
-            android:layout_weight="1"
-            android:background="#99000000"
-            android:orientation="vertical" >
-
-            <include layout="@layout/weather_preview" />
-        </LinearLayout>
-
-        <!-- 2nd day weather -->
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_margin="2dp"
-            android:layout_weight="1"
-            android:background="#99000000"
-            android:orientation="vertical" >
-
-            <include layout="@layout/weather_preview2" />
-        </LinearLayout>
     </LinearLayout>
 
 </LinearLayout>

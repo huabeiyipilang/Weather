@@ -1,7 +1,5 @@
 package cn.kli.weather;
 
-import java.text.SimpleDateFormat;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
@@ -11,12 +9,9 @@ import android.os.Message;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.Animation;
-import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
-import android.view.animation.RotateAnimation;
-import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -50,14 +45,10 @@ public class WeatherDisplay extends Activity implements OnClickListener,
 			case MSG_FRESH_ANIM_START:
 				mIbFresh.setVisibility(View.GONE);
 				mPbFreshing.setVisibility(View.VISIBLE);
-//			    mIbFresh.startAnimation(mFreshAnim);
-//			    mIbFresh.setEnabled(false);
 				break;
 			case MSG_FRESH_ANIM_STOP:
 				mIbFresh.setVisibility(View.VISIBLE);
 				mPbFreshing.setVisibility(View.GONE);
-//				mIbFresh.clearAnimation();
-//			    mIbFresh.setEnabled(true);
 				break;
 			}
 		}
@@ -114,8 +105,6 @@ public class WeatherDisplay extends Activity implements OnClickListener,
 		String degree = this.getString(R.string.sheshidu);
 		
 		Weather firstWeather = city.weather.get(0);
-		Weather secondWeather = city.weather.get(1);
-		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd");
 		
 		//current weather
 		TextView cityName = (TextView)findViewById(R.id.tv_city_name);
@@ -133,38 +122,13 @@ public class WeatherDisplay extends Activity implements OnClickListener,
 		currentWind.setText(firstWeather.wind);
 		currentWind.setShadowLayer(2F, 2F,1F, Color.BLACK);
 		
-		//1st weather
-		TextView fstDate = (TextView)findViewById(R.id.tv_prv_date);
-		fstDate.setText(sdf.format(firstWeather.calendar.getTime()));
-		
-		TextView fstWeather = (TextView)findViewById(R.id.tv_prv_weather);
-		fstWeather.setText(WeatherUtils.getWeather(this, firstWeather.weather));
-		
-		ImageView fstImg = (ImageView)findViewById(R.id.iv_prv_pic);
-		fstImg.setImageResource(WeatherUtils.getHDrawable(firstWeather.weather));
-
-		TextView fstMaxTemp = (TextView)findViewById(R.id.tv_prv_maxtemp);
-		fstMaxTemp.setText(firstWeather.maxTemp + degree);
-
-		TextView fstMinTemp = (TextView)findViewById(R.id.tv_prv_mintemp);
-		fstMinTemp.setText(firstWeather.minTemp + degree);
-		
-		//2st weather
-		TextView fstDate2 = (TextView)findViewById(R.id.tv_prv_date2);
-		fstDate2.setText(sdf.format(secondWeather.calendar.getTime()));
-		
-		TextView fstWeather2 = (TextView)findViewById(R.id.tv_prv_weather2);
-		fstWeather2.setText(WeatherUtils.getWeather(this, secondWeather.weather));
-		
-		ImageView fstImg2 = (ImageView)findViewById(R.id.iv_prv_pic2);
-		fstImg2.setImageResource(WeatherUtils.getHDrawable(secondWeather.weather));
-
-		TextView fstMaxTemp2 = (TextView)findViewById(R.id.tv_prv_maxtemp2);
-		fstMaxTemp2.setText(secondWeather.maxTemp + degree);
-
-		TextView fstMinTemp2 = (TextView)findViewById(R.id.tv_prv_mintemp2);
-		fstMinTemp2.setText(secondWeather.minTemp + degree);
-		
+		LinearLayout prvContainer = (LinearLayout)findViewById(R.id.ll_preview_container);
+		prvContainer.removeAllViews();
+		for(int i = 0; i < Config.getPrevCount(); i++){
+			WeatherPreviewView preview = new WeatherPreviewView(this);
+			preview.setWeather(city.weather.get(i));
+			prvContainer.addView(preview);
+		}
 	}
 	
 	@Override

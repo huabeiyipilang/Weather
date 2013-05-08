@@ -61,7 +61,19 @@
     </string-array>
     
     <string name="unknown">unknown</string>
-    <string name="initing">Initing...</string>
+    <string name="initing">"Initing..."</string>
 
-    <string name="weather_warning">Weather warning</string>
+    <string name="weather_warning">Weather warning</string>    
+    <string name="today">Today</string>
+    <string-array name="weekday">
+        <item>Sunday</item>
+        <item>Monday</item>
+        <item>Tuesday</item>
+        <item>Wednesday</item>
+        <item>Thursday</item>
+        <item>Friday</item>
+        <item>Saturday</item>
+    </string-array>
+    
+    <string name="date_format">MM-dd</string>
 </resources>
