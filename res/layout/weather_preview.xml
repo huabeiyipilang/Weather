@@ -10,7 +10,7 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:gravity="center"
-        android:text="Medium Text"
+        android:text="@string/unknown"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <LinearLayout
@@ -37,13 +37,13 @@
                 android:id="@+id/tv_prv_maxtemp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="TextView" />
+                android:text="@string/unknown" />
 
             <TextView
                 android:id="@+id/tv_prv_mintemp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="TextView" />
+                android:text="@string/unknown" />
             
         </LinearLayout>
     </LinearLayout>
@@ -54,7 +54,7 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:gravity="center"
-        android:text="Medium Text"
+        android:text="@string/unknown"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
 </LinearLayout>
