@@ -5,8 +5,8 @@
         android:key="select_city"
         android:title="@string/settings_city_select" >
         <intent
-            android:targetClass="cn.ingenic.weather.CitySelectActivity"
-            android:targetPackage="cn.ingenic.weather" />
+            android:targetClass="cn.kli.weather.CitySelectActivity"
+            android:targetPackage="cn.kli.weather" />
     </Preference>
 
     <ListPreference
