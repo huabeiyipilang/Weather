@@ -1,5 +1,6 @@
 package cn.kli.weather;
 
+import cn.kli.utils.klilog;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;

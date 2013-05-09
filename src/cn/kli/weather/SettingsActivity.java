@@ -1,5 +1,6 @@
 package cn.kli.weather;
 
+import cn.kli.utils.klilog;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;

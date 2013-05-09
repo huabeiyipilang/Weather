@@ -22,6 +22,7 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import cn.kli.utils.klilog;
 import cn.kli.weather.engine.City;
 
 public class CitySelectActivity extends Activity implements OnItemClickListener {
