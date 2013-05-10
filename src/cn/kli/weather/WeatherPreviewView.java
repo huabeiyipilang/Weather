@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -28,8 +29,11 @@ public class WeatherPreviewView extends LinearLayout {
 		params.weight = 1;
 		this.setLayoutParams(params);
 		
-		this.setBackgroundResource(android.R.drawable.dialog_frame);
-		this.setAlpha(Config.getWeatherDisplayAlpha());
+
+		Drawable d = this.getResources().getDrawable(android.R.drawable.dialog_frame);
+		d.setAlpha((int) (Config.getWeatherDisplayAlpha() * 255));
+		this.setBackgroundDrawable(d);
+		
 	}
 
 	public void setWeather(Weather weather){
