@@ -5,6 +5,7 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import cn.kli.utils.CollectionUtils;
 import cn.kli.utils.klilog;
 import cn.kli.weather.engine.City;
 import cn.kli.weather.engine.Weather;
@@ -84,8 +85,9 @@ public class CacheManager {
 							.getColumnIndex(DbHelper.WEATHER_MAX_TEMP));
 					weather.minTemp = weather_cursor.getString(weather_cursor
 							.getColumnIndex(DbHelper.WEATHER_MIN_TEMP));
-					weather.weather = weather_cursor.getString(weather_cursor
+					String code = weather_cursor.getString(weather_cursor
 							.getColumnIndex(DbHelper.WEATHER_WEATHER));
+					weather.weather = decodeWeather(code);
 					weather.wind = weather_cursor.getString(weather_cursor
 							.getColumnIndex(DbHelper.WEATHER_WIND));
 					weather.calendar = calweather;
@@ -120,7 +122,7 @@ public class CacheManager {
 			cv.put(DbHelper.WEATHER_TEMP, weather.currentTemp);
 			cv.put(DbHelper.WEATHER_MAX_TEMP, weather.maxTemp);
 			cv.put(DbHelper.WEATHER_MIN_TEMP, weather.minTemp);
-			cv.put(DbHelper.WEATHER_WEATHER, weather.weather);
+			cv.put(DbHelper.WEATHER_WEATHER, codeWeather(weather.weather));
 			cv.put(DbHelper.WEATHER_WIND, weather.wind);
 			cv.put(DbHelper.WEATHER_DATE, weather.calendar.getTimeInMillis());
 			cv.put(DbHelper.WEATHER_UPDATE_TIME, System.currentTimeMillis());
@@ -129,9 +131,25 @@ public class CacheManager {
 		db.close();
 	}
 	
+	private String codeWeather(int[] weather){
+		if(weather == null){
+			return null;
+		}else{
+			String res = "";
+			for(int i = 0; i < weather.length; i++){
+				res += weather[i];
+				if(i != weather.length - 1){
+					res += ",";
+				}
+			}
+			return res;
+		}
+	}
 	
-	
-	
+	private int[] decodeWeather(String code){
+		String[] codes = code.split(",");
+		return CollectionUtils.stringArray2IntArray(codes);
+	}
 	
 	
 

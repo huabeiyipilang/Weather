@@ -199,7 +199,7 @@ public class EngineManager {
             return;
 		}
 		Weather weather = city.weather.get(0);
-		if(WeatherUtils.isBadWeather(weather)){
+		if(weather.isBadWeather()){
 			notifyWeather(city);
 		} 
 	}
@@ -216,9 +216,9 @@ public class EngineManager {
 		
 		Notification.Builder builder = new Notification.Builder(mContext);
 		Notification notif = builder.setContentTitle(mContext.getString(R.string.weather_warning))
-				.setContentText(city.name+" "+WeatherUtils.getWeather(mContext, weather.weather))
-				.setLargeIcon(BitmapFactory.decodeResource(mContext.getResources(), WeatherUtils.getMDrawable(weather.weather)))
-				.setSmallIcon(WeatherUtils.getMDrawable(weather.weather))
+				.setContentText(city.name+" "+weather.getWeatherName(mContext))
+				.setLargeIcon(BitmapFactory.decodeResource(mContext.getResources(), weather.getIcon()))
+				.setSmallIcon(weather.getIcon())
 				.setContentIntent(intent)
 				.build();
 				
@@ -252,11 +252,11 @@ public class EngineManager {
 			String sheshidu = mContext.getString(R.string.sheshidu);
 			Weather weather = city.weather.get(0);
 			intent.putExtra("city", city.name);
-			intent.putExtra("weather", WeatherUtils.getWeather(mContext, weather.weather));
+			intent.putExtra("weather", weather.getWeatherName(mContext));
 			intent.putExtra("current_temp", weather.currentTemp+sheshidu);
 			intent.putExtra("max_temp", weather.maxTemp+sheshidu);
 			intent.putExtra("min_temp", weather.minTemp+sheshidu);
-			intent.putExtra("icon", WeatherUtils.getHDrawable(weather.weather));
+			intent.putExtra("icon", weather.getIcon());
 		}else{
 //			intent.putExtra("city", mContext.getString(R.string.unknown));
 //			intent.putExtra("weather", mContext.getString(R.string.unknown));

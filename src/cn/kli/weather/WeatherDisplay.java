@@ -115,7 +115,7 @@ public class WeatherDisplay extends Activity implements OnClickListener,
 		currentTemp.setShadowLayer(2F, 2F,1F, Color.BLACK);
 		
 		TextView currentWeather = (TextView)findViewById(R.id.current_weather);
-		currentWeather.setText(WeatherUtils.getWeather(this, firstWeather.weather));
+		currentWeather.setText(firstWeather.getWeatherName(this));
 		currentWeather.setShadowLayer(2F, 2F,1F, Color.BLACK);
 
 		TextView currentWind = (TextView)findViewById(R.id.current_wind);
