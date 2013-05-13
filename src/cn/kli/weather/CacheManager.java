@@ -126,6 +126,9 @@ public class CacheManager {
 			cv.put(DbHelper.WEATHER_WIND, weather.wind);
 			cv.put(DbHelper.WEATHER_DATE, weather.calendar.getTimeInMillis());
 			cv.put(DbHelper.WEATHER_UPDATE_TIME, System.currentTimeMillis());
+			db.delete(DbHelper.TABLE_WEATHER_CACHE, DbHelper.WEATHER_INDEX+
+					"=? and "+DbHelper.WEATHER_DATE+"=?", 
+					new String[]{city.index, weather.calendar.getTimeInMillis()+""});
 			db.insert(DbHelper.TABLE_WEATHER_CACHE, null, cv);
 		}
 		db.close();
