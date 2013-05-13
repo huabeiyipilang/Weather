@@ -74,14 +74,16 @@ public class WidgetProvider extends AppWidgetProvider {
 		klilog.i("updateWidgetWeather");
 		//prepare data to display
 		RemoteViews rv = getRemoteView(context);
-		rv.setTextViewText(R.id.tv_city, bundle.getString("city"));
-		rv.setTextViewText(R.id.tv_weather, bundle.getString("weather"));
-		rv.setTextViewText(R.id.tv_current, bundle.getString("current_temp"));
-		rv.setTextViewText(R.id.tv_maxmin, bundle.getString("min_temp")+"|"+
-				bundle.getString("max_temp"));
-		int icon = bundle.getInt("icon", 0);
-		if(icon != 0){
-			rv.setImageViewResource(R.id.iv_icon, icon);
+		if(bundle != null){
+			rv.setTextViewText(R.id.tv_city, bundle.getString("city"));
+			rv.setTextViewText(R.id.tv_weather, bundle.getString("weather"));
+			rv.setTextViewText(R.id.tv_current, bundle.getString("current_temp"));
+			rv.setTextViewText(R.id.tv_maxmin, bundle.getString("min_temp")+"|"+
+					bundle.getString("max_temp"));
+			int icon = bundle.getInt("icon", 0);
+			if(icon != 0){
+				rv.setImageViewResource(R.id.iv_icon, icon);
+			}
 		}
 
 		notifyWidget(context, rv);

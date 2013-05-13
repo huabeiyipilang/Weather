@@ -3,7 +3,7 @@
     android:minWidth="294dp"
     android:minHeight="72dp"
     android:updatePeriodMillis="86400000"
-    android:initialLayout="@layout/widget_time_weather">
-    
+    android:initialLayout="@layout/widget_time_weather"
+    android:widgetCategory="keyguard|home_screen">
 
 </appwidget-provider>
