@@ -22,7 +22,7 @@ public class WidgetProvider extends AppWidgetProvider {
 		super.onEnabled(context);
 		klilog.i("onEnabled");
 		updateWidgetTime(context);
-		setWidgetUpdateTime(context);
+//		setWidgetUpdateTime(context);
 	}
 
 	@Override
@@ -67,7 +67,7 @@ public class WidgetProvider extends AppWidgetProvider {
 	public void onDisabled(Context context) {
 		super.onDisabled(context);
 		klilog.i("onDisabled");
-		removeWidgetUpdateTime(context);
+//		removeWidgetUpdateTime(context);
 	}
 	
 	private void updateWidgetWeather(Context context, Bundle bundle){
@@ -101,6 +101,7 @@ public class WidgetProvider extends AppWidgetProvider {
 		rv.setImageViewResource(R.id.iv_time_3, getNumPic(minite/10));
 		rv.setImageViewResource(R.id.iv_time_4, getNumPic(minite%10));
 		notifyWidget(context, rv);
+		setWidgetUpdateTime(context);
 	}
 	
 	private int getNumPic(int num){
