@@ -3,6 +3,7 @@
 
     <string name="app_name">天气</string>
     
+     <!-- 天气类型 -->
     <string name="weather_q">晴</string>
     <string name="weather_dyun">多云</string>
     <string name="weather_y">阴</string>
@@ -36,7 +37,7 @@
     <string name="weather_ysh">扬沙</string>
     <string name="weather_qshchb">强沙尘暴</string>
     <string name="weather_nothing">没有数据</string>
-    
+
     <string name="weather_to">转</string>
     <string name="sheshidu">℃</string>
     
@@ -76,4 +77,5 @@
     </string-array>
     
     <string name="date_format">MM月dd日</string>
+    
 </resources>

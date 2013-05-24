@@ -12,7 +12,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import cn.kli.weather.engine.Weather;
-import cn.kli.weatherengine.R;
 
 public class WeatherParser {
 	

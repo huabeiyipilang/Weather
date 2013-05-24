@@ -1,9 +1,7 @@
 package cn.kli.weather.engine;
 
-import java.util.ArrayList;
-
+import cn.kli.weather.R;
 import cn.kli.weather.engine.Weather;
-import cn.kli.weatherengine.R;
 import android.content.Context;
 
 class WeatherUtils {
