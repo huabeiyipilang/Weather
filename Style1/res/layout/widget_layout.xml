@@ -49,14 +49,12 @@
                             android:id="@+id/tv_city"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/unknown" 
                             android:textColor="@android:color/white"/>
 
                         <TextView
                             android:id="@+id/tv_weather"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/unknown" 
                             android:textColor="@android:color/white"/>
                     </LinearLayout>
 
@@ -76,7 +74,6 @@
                             android:id="@+id/tv_current"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/unknown" 
                             android:textColor="@android:color/white"/>
 
                    	 <LinearLayout
@@ -86,7 +83,6 @@
                             android:id="@+id/tv_min"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/unknown"
                             android:textColor="@android:color/white" />
                         <TextView
                             android:layout_width="wrap_content"
@@ -97,7 +93,6 @@
                             android:id="@+id/tv_max"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/unknown" 
                             android:textColor="@android:color/white"/>
                         </LinearLayout>
                     </LinearLayout>
@@ -136,7 +131,6 @@
                             android:src="@drawable/n0" />
 
                         <ImageView
-                            android:id="@+id/iv_time_2"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.5"
@@ -180,7 +174,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginRight="3dp"
-                            android:text="@string/unknown"
                             android:textAppearance="?android:attr/textAppearanceMedium" />
 
                         <TextView
@@ -188,7 +181,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="3dp"
-                            android:text="@string/unknown"
                             android:textAppearance="?android:attr/textAppearanceMedium" />
                     </LinearLayout>
                 </LinearLayout>
@@ -212,10 +204,8 @@
 
                 <ImageView
                     android:id="@+id/iv_icon"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:src="@drawable/a_nothing" />
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
             </LinearLayout>
 
             <LinearLayout

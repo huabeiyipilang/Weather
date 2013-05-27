@@ -11,20 +11,18 @@ import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
-import android.widget.Button;
 import android.widget.RemoteViews;
 
 public class WidgetProvider extends AppWidgetProvider {
 	private final static String ACTION_UPDATE_TIME = "cn.kli.weatherwidget.update_time";
+	public final static String ACTION_UPDATE_SKIN = "cn.kli.weatherwidget.update_skin";
 	
 	@Override
 	public void onEnabled(Context context) {
 		super.onEnabled(context);
 		klilog.i("onEnabled");
 		updateWidgetTime(context);
-//		setWidgetUpdateTime(context);
 	}
 
 	@Override
@@ -37,6 +35,9 @@ public class WidgetProvider extends AppWidgetProvider {
 			updateWidgetTime(context);
 		}else if(EngineManager.ACTION_FRESH_WIDGET.equals(action)){
 			updateWidgetWeather(context, intent.getExtras());
+		}else if(ACTION_UPDATE_SKIN.equals(action)){
+			updateWidgetTime(context);
+			EngineManager.getInstance(context).updateWidget();
 		}
 	}
 	
@@ -74,21 +75,21 @@ public class WidgetProvider extends AppWidgetProvider {
 	
 	private void updateWidgetWeather(Context context, Bundle bundle){
 		klilog.i("updateWidgetWeather");
-		WidgetViewBuilder builder = getDefaultBuilder(context);
+		WidgetViewBuilder builder = getWidgetBuilder(context);
 		if(builder == null){
 			return;
 		}
-		builder.setWeather(bundle);
+		builder.updateWeather(bundle);
 		notifyWidget(context, builder.build());
 	}
 	
 	private void updateWidgetTime(Context context){
 		klilog.i("updateWidgetWeather");
-		WidgetViewBuilder builder = getDefaultBuilder(context);
+		WidgetViewBuilder builder = getWidgetBuilder(context);
 		if(builder == null){
 			return;
 		}
-		builder.setUpdateTime(true);
+		builder.updateTime(true);
 		notifyWidget(context, builder.build());
 		setWidgetUpdateTime(context);
 	}
@@ -122,37 +123,10 @@ public class WidgetProvider extends AppWidgetProvider {
 		return  PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
 	}
 	
-	private WidgetViewBuilder getDefaultBuilder(Context context){
-		WidgetViewBuilder builder = new WidgetViewBuilder(context);
-		builder.setLayout(R.layout.widget_layout);
-		int[] numRes = {R.drawable.n0, R.drawable.n1, R.drawable.n2, 
-				R.drawable.n3, R.drawable.n4, R.drawable.n5, R.drawable.n6, 
-				R.drawable.n7, R.drawable.n8, R.drawable.n9, 
-				R.drawable.am, R.drawable.pm};
-		builder.setNumRes(numRes);
+	private WidgetViewBuilder getWidgetBuilder(Context context){
+		WidgetViewBuilder builder = new WidgetViewBuilder(context, 
+				SkinManager.getInstance(context).getCurrentSkin());
 		return builder;
-	}
-	
-	
-	private WidgetViewBuilder getRemoteSkin(Context context) {
-		try {
-			Context remoteContext = context.createPackageContext("cn.ingenic.weather.skin.styleyu",
-					Context.CONTEXT_IGNORE_SECURITY|Context.CONTEXT_INCLUDE_CODE);
-			
-			WidgetViewBuilder builder = new WidgetViewBuilder(context);
-			builder.setRemoteContext(remoteContext);
-			builder.setLayout(R.layout.widget_layout);
-			
-			int[] numRes = { R.drawable.n0, R.drawable.n1, R.drawable.n2,
-					R.drawable.n3, R.drawable.n4, R.drawable.n5, R.drawable.n6,
-					R.drawable.n7, R.drawable.n8, R.drawable.n9, R.drawable.am,
-					R.drawable.pm };
-			builder.setNumRes(numRes);
-			return builder;
-		} catch (NameNotFoundException e) {
-			e.printStackTrace();
-		}
-		return null;
 	}
 	
 }
