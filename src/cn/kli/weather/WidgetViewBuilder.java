@@ -13,15 +13,11 @@ import android.widget.RemoteViews;
 public class WidgetViewBuilder {
 	private final static boolean HOUR_24 = false;
 	
-	private final static int[] numRes = {R.drawable.n0, R.drawable.n1, R.drawable.n2, 
-			R.drawable.n3, R.drawable.n4, R.drawable.n5, R.drawable.n6, 
-			R.drawable.n7, R.drawable.n8, R.drawable.n9, 
-			R.drawable.am, R.drawable.pm};
-	
 	private Context mContext;
 	private RemoteViews mRv;
 	private Bundle mWeatherData;
 	private boolean mUpdateTime;
+	private boolean mUpdateWeather;
 	private Skin mSkin;
 	
 	WidgetViewBuilder(Context context, Skin skin){
@@ -33,17 +29,16 @@ public class WidgetViewBuilder {
 		mUpdateTime = update;
 	}
 	
-	public void updateWeather(Bundle data){
+	public void updateWeather(boolean update){
+		mUpdateWeather = update;
+	}
+	
+	public void setWeatherData(Bundle data){
 		mWeatherData = data;
 	}
 	
 	public RemoteViews build(){
-		if(mSkin == null){
-			buildFromDefault();
-		}else{
-			buildFromRemote();
-		}
-		
+		buildFromRemote();
 		return mRv;
 	}
 	
@@ -67,16 +62,33 @@ public class WidgetViewBuilder {
 	private void buildFromRemote(){
 
 		mRv = new RemoteViews(mSkin.getPackageName(), getId(Skin.layout.widget_layout));
-		if(mWeatherData != null){
-			mRv.setTextViewText(getId(Skin.id.tv_city), mWeatherData.getString("city"));
-			mRv.setTextViewText(getId(Skin.id.tv_weather), mWeatherData.getString("weather"));
-			mRv.setTextViewText(getId(Skin.id.tv_current), mWeatherData.getString("current_temp"));
-			mRv.setTextViewText(getId(Skin.id.tv_min), mWeatherData.getString("min_temp"));
-			mRv.setTextViewText(getId(Skin.id.tv_max), mWeatherData.getString("max_temp"));
-			int icon = mWeatherData.getInt("icon", 0);
-			if(icon != 0){
-				BitmapDrawable bd = (BitmapDrawable)mContext.getResources().getDrawable(icon);
-				mRv.setImageViewBitmap(getId(Skin.id.iv_icon), bd.getBitmap());
+		if(mUpdateWeather){
+			if(mWeatherData != null){
+				mRv.setViewVisibility(getId(Skin.id.tv_weather), View.VISIBLE);
+				mRv.setViewVisibility(getId(Skin.id.tv_current),View.VISIBLE);
+				mRv.setViewVisibility(getId(Skin.id.tv_min), View.VISIBLE);
+				mRv.setViewVisibility(getId(Skin.id.tv_min_to_max), View.VISIBLE);
+				mRv.setViewVisibility(getId(Skin.id.tv_max), View.VISIBLE);
+				mRv.setViewVisibility(getId(Skin.id.iv_icon), View.VISIBLE);
+				
+				mRv.setTextViewText(getId(Skin.id.tv_city), mWeatherData.getString("city"));
+				mRv.setTextViewText(getId(Skin.id.tv_weather), mWeatherData.getString("weather"));
+				mRv.setTextViewText(getId(Skin.id.tv_current), mWeatherData.getString("current_temp"));
+				mRv.setTextViewText(getId(Skin.id.tv_min), mWeatherData.getString("min_temp"));
+				mRv.setTextViewText(getId(Skin.id.tv_max), "/"+mWeatherData.getString("max_temp"));
+				int icon = mWeatherData.getInt("icon", 0);
+				if(icon != 0){
+					BitmapDrawable bd = (BitmapDrawable)mContext.getResources().getDrawable(icon);
+					mRv.setImageViewBitmap(getId(Skin.id.iv_icon), bd.getBitmap());
+				}
+			}else{
+				mRv.setViewVisibility(getId(Skin.id.tv_weather), View.INVISIBLE);
+				mRv.setViewVisibility(getId(Skin.id.tv_current),View.INVISIBLE);
+				mRv.setViewVisibility(getId(Skin.id.tv_min), View.INVISIBLE);
+				mRv.setViewVisibility(getId(Skin.id.tv_min_to_max), View.INVISIBLE);
+				mRv.setViewVisibility(getId(Skin.id.tv_max), View.INVISIBLE);
+				mRv.setViewVisibility(getId(Skin.id.iv_icon), View.INVISIBLE);
+				mRv.setTextViewText(getId(Skin.id.tv_city), mContext.getString(R.string.no_weather_data));
 			}
 		}
 		
@@ -107,51 +119,5 @@ public class WidgetViewBuilder {
 			
 		}
 	}
-	
-	private void buildFromDefault(){
-		
-		mRv = new RemoteViews(mContext.getPackageName(), R.layout.widget_layout);
-		
-		if(mWeatherData != null){
-			mRv.setTextViewText(R.id.tv_city, mWeatherData.getString("city"));
-			mRv.setTextViewText(R.id.tv_weather, mWeatherData.getString("weather"));
-			mRv.setTextViewText(R.id.tv_current, mWeatherData.getString("current_temp"));
-			mRv.setTextViewText(R.id.tv_min, mWeatherData.getString("min_temp"));
-			mRv.setTextViewText(R.id.tv_max, mWeatherData.getString("max_temp"));
-			int icon = mWeatherData.getInt("icon", 0);
-			if(icon != 0){
-				mRv.setImageViewResource(R.id.iv_icon, icon);
-			}
-		}
-		
-		if(mUpdateTime){
-			Calendar c = Calendar.getInstance();
-			int hour = c.get(Calendar.HOUR_OF_DAY);
-			int minite = c.get(Calendar.MINUTE);
-			if(HOUR_24){
-				mRv.setImageViewResource(R.id.iv_time_1, numRes[hour/10]);
-				mRv.setImageViewResource(R.id.iv_time_2, numRes[hour%10]);
-				mRv.setViewVisibility(R.id.iv_time_apm, View.GONE);
-			}else{
-				mRv.setImageViewResource(R.id.iv_time_1, hour > 12 ? numRes[(hour - 12)/10] : numRes[hour/10]);
-				mRv.setImageViewResource(R.id.iv_time_2, hour > 12 ? numRes[(hour - 12)%10] : numRes[hour%10]);
-				mRv.setViewVisibility(R.id.iv_time_apm, View.VISIBLE);
-				mRv.setImageViewResource(R.id.iv_time_apm, hour > 12 ? numRes[11] : numRes[10]);
-			}
-			mRv.setImageViewResource(R.id.iv_time_3, numRes[minite/10]);
-			mRv.setImageViewResource(R.id.iv_time_4, numRes[minite%10]);
-			
-			int i = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
-			String[] days = mContext.getResources().getStringArray(R.array.weekday);
-			mRv.setTextViewText(R.id.tv_week, days[i-1]);
-
-			String dateFormat = mContext.getString(R.string.date_format);
-			SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);
-			mRv.setTextViewText(R.id.tv_date, sdf.format(new Date()));
-			
-		}
-	}
-
-	
 	
 }

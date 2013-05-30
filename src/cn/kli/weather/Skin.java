@@ -18,6 +18,7 @@ class Skin {
 		static final String tv_current = "tv_current";
 		static final String tv_min = "tv_min";
 		static final String tv_max = "tv_max";
+		static final String tv_min_to_max = "tv_min_to_max";
 		static final String iv_icon = "iv_icon";
 		static final String iv_time_1 = "iv_time_1";
 		static final String iv_time_2 = "iv_time_2";

@@ -18,11 +18,14 @@ public class WidgetProvider extends AppWidgetProvider {
 	private final static String ACTION_UPDATE_TIME = "cn.kli.weatherwidget.update_time";
 	public final static String ACTION_UPDATE_SKIN = "cn.kli.weatherwidget.update_skin";
 	
+	private PendingIntent mFreshIntent;
+	
 	@Override
 	public void onEnabled(Context context) {
 		super.onEnabled(context);
 		klilog.i("onEnabled");
-		updateWidgetTime(context);
+		setWidgetUpdateAlarm(context);
+		updateAll(context);
 	}
 
 	@Override
@@ -32,13 +35,17 @@ public class WidgetProvider extends AppWidgetProvider {
 		String action = intent.getAction();
 		klilog.i("WidgetProvider received:"+action);
 		if(ACTION_UPDATE_TIME.equals(action)){
-			updateWidgetTime(context);
+			updateAll(context);
 		}else if(EngineManager.ACTION_FRESH_WIDGET.equals(action)){
 			updateWidgetWeather(context, intent.getExtras());
 		}else if(ACTION_UPDATE_SKIN.equals(action)){
-			updateWidgetTime(context);
-			EngineManager.getInstance(context).updateWidget();
+			updateAll(context);
 		}
+	}
+	
+	private void updateAll(Context context){
+		updateWidgetTime(context);
+		EngineManager.getInstance(context).updateWidget();
 	}
 	
 
@@ -70,28 +77,28 @@ public class WidgetProvider extends AppWidgetProvider {
 	public void onDisabled(Context context) {
 		super.onDisabled(context);
 		klilog.i("onDisabled");
-//		removeWidgetUpdateTime(context);
+		removeWidgetUpdateAlarm(context);
 	}
-	
+
 	private void updateWidgetWeather(Context context, Bundle bundle){
 		klilog.i("updateWidgetWeather");
 		WidgetViewBuilder builder = getWidgetBuilder(context);
 		if(builder == null){
 			return;
 		}
-		builder.updateWeather(bundle);
+		builder.updateWeather(true);
+		builder.setWeatherData(bundle);
 		notifyWidget(context, builder.build());
 	}
 	
 	private void updateWidgetTime(Context context){
-		klilog.i("updateWidgetWeather");
+		klilog.i("updateWidgetTime");
 		WidgetViewBuilder builder = getWidgetBuilder(context);
 		if(builder == null){
 			return;
 		}
 		builder.updateTime(true);
 		notifyWidget(context, builder.build());
-		setWidgetUpdateTime(context);
 	}
 	
 	private void notifyWidget(Context context, RemoteViews rv){
@@ -104,9 +111,9 @@ public class WidgetProvider extends AppWidgetProvider {
 		awm.updateAppWidget(appIds, rv);
 	}
 	
-	private void setWidgetUpdateTime(Context context) {
+	private void setWidgetUpdateAlarm(Context context) {
 		AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-		PendingIntent sender = getUpdateTimePendingIntent(context);
+		mFreshIntent = getUpdateTimePendingIntent(context);
 		int interval = 1000 * 60;
 
 		Calendar notify = Calendar.getInstance();
@@ -115,7 +122,14 @@ public class WidgetProvider extends AppWidgetProvider {
 		notify.set(Calendar.SECOND, 0);
 		notify.set(Calendar.MILLISECOND, 0);
 		
-		am.setRepeating(AlarmManager.RTC_WAKEUP, notify.getTimeInMillis(), interval, sender);
+		am.setRepeating(AlarmManager.RTC_WAKEUP, notify.getTimeInMillis(), interval, mFreshIntent);
+	}
+	
+	private void removeWidgetUpdateAlarm(Context context) {
+		if(mFreshIntent != null){
+			AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+			am.cancel(mFreshIntent);
+		}
 	}
 	
 	private PendingIntent getUpdateTimePendingIntent(Context context){

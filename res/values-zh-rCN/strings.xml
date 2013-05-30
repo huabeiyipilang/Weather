@@ -78,5 +78,5 @@
     </string-array>
     
     <string name="date_format">MM月dd日</string>
-    
+    <string name="no_weather_data">无天气数据</string>
 </resources>
