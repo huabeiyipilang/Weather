@@ -4,6 +4,7 @@ import java.util.Calendar;
 
 import cn.kli.utils.klilog;
 
+import android.annotation.TargetApi;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
@@ -11,9 +12,11 @@ import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.widget.RemoteViews;
 
+@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 public class WidgetProvider extends AppWidgetProvider {
 	private final static String ACTION_UPDATE_TIME = "cn.kli.weatherwidget.update_time";
 	public final static String ACTION_UPDATE_SKIN = "cn.kli.weatherwidget.update_skin";
@@ -23,7 +26,7 @@ public class WidgetProvider extends AppWidgetProvider {
 	@Override
 	public void onEnabled(Context context) {
 		super.onEnabled(context);
-		klilog.i("onEnabled");
+		klilog.info("onEnabled");
 		setWidgetUpdateAlarm(context);
 		updateAll(context);
 	}
@@ -31,9 +34,9 @@ public class WidgetProvider extends AppWidgetProvider {
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		super.onReceive(context, intent);
-		klilog.i("onReceive");
+		klilog.info("onReceive");
 		String action = intent.getAction();
-		klilog.i("WidgetProvider received:"+action);
+		klilog.info("WidgetProvider received:"+action);
 		if(ACTION_UPDATE_TIME.equals(action)){
 			updateAll(context);
 		}else if(EngineManager.ACTION_FRESH_WIDGET.equals(action)){
@@ -55,20 +58,20 @@ public class WidgetProvider extends AppWidgetProvider {
 			Bundle newOptions) {
 		super.onAppWidgetOptionsChanged(context, appWidgetManager, appWidgetId,
 				newOptions);
-		klilog.i("onAppWidgetOptionsChanged");
+		klilog.info("onAppWidgetOptionsChanged");
 	}
 
 	@Override
 	public void onDeleted(Context context, int[] appWidgetIds) {
 		super.onDeleted(context, appWidgetIds);
-		klilog.i("onDeleted");
+		klilog.info("onDeleted");
 	}
 
 	@Override
 	public void onUpdate(Context context, AppWidgetManager appWidgetManager,
 			int[] appWidgetIds) {
 		super.onUpdate(context, appWidgetManager, appWidgetIds);
-		klilog.i("onUpdate");
+		klilog.info("onUpdate");
 		EngineManager.getInstance(context).updateWidget();
 		updateWidgetTime(context);
 	}
@@ -76,12 +79,12 @@ public class WidgetProvider extends AppWidgetProvider {
 	@Override
 	public void onDisabled(Context context) {
 		super.onDisabled(context);
-		klilog.i("onDisabled");
+		klilog.info("onDisabled");
 		removeWidgetUpdateAlarm(context);
 	}
 
 	private void updateWidgetWeather(Context context, Bundle bundle){
-		klilog.i("updateWidgetWeather");
+		klilog.info("updateWidgetWeather");
 		WidgetViewBuilder builder = getWidgetBuilder(context);
 		if(builder == null){
 			return;
@@ -92,7 +95,7 @@ public class WidgetProvider extends AppWidgetProvider {
 	}
 	
 	private void updateWidgetTime(Context context){
-		klilog.i("updateWidgetTime");
+		klilog.info("updateWidgetTime");
 		WidgetViewBuilder builder = getWidgetBuilder(context);
 		if(builder == null){
 			return;

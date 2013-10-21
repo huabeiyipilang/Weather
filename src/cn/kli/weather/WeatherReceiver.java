@@ -10,7 +10,7 @@ public class WeatherReceiver extends BroadcastReceiver {
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		String action = intent.getAction();
-		klilog.i("Weather Receiver received action:"+action);
+		klilog.info("Weather Receiver received action:"+action);
 		if(Intent.ACTION_BOOT_COMPLETED.equals(action)){
 			
 		}else if(EngineManager.ACTION_UPDATE_WEATHER.equals(action)){

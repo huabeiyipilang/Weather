@@ -106,7 +106,7 @@ public class CitySelectActivity extends Activity implements OnItemClickListener 
 		}
 
 		//fresh list view
-		klilog.i("mCurrentList.size() = "+mCurrentList.size());
+		klilog.info("mCurrentList.size() = "+mCurrentList.size());
 		CityListAdapter adapter = new CityListAdapter(this, mCurrentList);
 		mLvCityList.setAdapter(adapter);
 		
@@ -162,7 +162,7 @@ public class CitySelectActivity extends Activity implements OnItemClickListener 
 
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int pos, long arg3) {
-		klilog.i("onItemClick pos = " + pos);
+		klilog.info("onItemClick pos = " + pos);
 		City city = mCurrentList.get(pos);
 		mCityTree.add(city);
 		freshListByCity(city);

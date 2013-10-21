@@ -191,7 +191,7 @@ public class CacheManager {
 					CITY_SOURCE + " text,"+
 					CITY_ORDER + " integer, "+
 					CITY_UPDATE_TIME + " timestamp)";
-			klilog.i(create_city);
+			klilog.info(create_city);
 			db.execSQL(create_city);
 			
 			String create_weather = "create table "+TABLE_WEATHER_CACHE+"("+
@@ -203,7 +203,7 @@ public class CacheManager {
 					WEATHER_WIND + " text, "+
 					WEATHER_DATE + " timestamp, "+
 					WEATHER_UPDATE_TIME + " timestamp)";
-			klilog.i(create_weather);
+			klilog.info(create_weather);
 			db.execSQL(create_weather);
 		}
 

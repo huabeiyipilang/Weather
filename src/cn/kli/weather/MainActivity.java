@@ -9,6 +9,7 @@ import android.os.Message;
 
 public class MainActivity extends Activity {
 	private final static int MSG_INIT = 0;
+	klilog log = new klilog(MainActivity.class);
 	
 	private EngineManager mManager;
 	
@@ -38,6 +39,7 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		log.i("test klilog");
 	}
 
 
@@ -45,13 +47,13 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		klilog.i("onResume");
+		klilog.info("onResume");
 		mManager = EngineManager.getInstance(this);
 		mManager.init(mHandler.obtainMessage(MSG_INIT));
 	}
 
 	private void translateTo(Class<? extends Activity> cls, Bundle bundle){
-		klilog.i("translateTo "+cls.getName());
+		klilog.info("translateTo "+cls.getName());
 		overridePendingTransition(0, 0);
 		Intent intent = new Intent(this, cls);
 		if(bundle != null){

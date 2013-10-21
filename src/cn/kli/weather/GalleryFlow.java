@@ -11,13 +11,13 @@ import android.widget.Gallery;
 import android.widget.ImageView;
 
 public class GalleryFlow extends Gallery {
-    private Camera mCamera = new Camera();//Ïà»úÀà
-    private int mMaxRotationAngle = 60;//×î´ó×ª¶¯½Ç¶È
-    private int mMaxZoom = -300;////×î´óËõ·ÅÖµ
-    private int mCoveflowCenter;//°ë¾¶Öµ
+    private Camera mCamera = new Camera();//ï¿½ï¿½ï¿½ï¿½ï¿½
+    private int mMaxRotationAngle = 60;//ï¿½ï¿½ï¿½×ªï¿½ï¿½ï¿½Ç¶ï¿½
+    private int mMaxZoom = -300;////ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öµ
+    private int mCoveflowCenter;//ï¿½ë¾¶Öµ
     public GalleryFlow(Context context) {
         super(context);
-        //Ö§³Ö×ª»» ,Ö´ÐÐgetChildStaticTransformation·½·¨
+        //Ö§ï¿½ï¿½×ªï¿½ï¿½ ,Ö´ï¿½ï¿½getChildStaticTransformationï¿½ï¿½ï¿½ï¿½
         this.setStaticTransformationsEnabled(true);
     }
     public GalleryFlow(Context context, AttributeSet attrs) {
@@ -51,27 +51,27 @@ public class GalleryFlow extends Gallery {
     }
     
     
-   //¿ØÖÆgalleryÖÐÃ¿¸öÍ¼Æ¬µÄÐý×ª(ÖØÐ´µÄgalleryÖÐ·½·¨)
+   //ï¿½ï¿½ï¿½ï¿½galleryï¿½ï¿½Ã¿ï¿½ï¿½Í¼Æ¬ï¿½ï¿½ï¿½ï¿½×ª(ï¿½ï¿½Ð´ï¿½ï¿½galleryï¿½Ð·ï¿½ï¿½ï¿½)
     protected boolean getChildStaticTransformation(View child, Transformation t) {  
-        //È¡µÃµ±Ç°×ÓviewµÄ°ë¾¶Öµ
+        //È¡ï¿½Ãµï¿½Ç°ï¿½ï¿½viewï¿½Ä°ë¾¶Öµ
         final int childCenter = getCenterOfView(child);
-        System.out.println("childCenter£º"+childCenter +"  mCoveflowCenter:"+mCoveflowCenter);
+        System.out.println("childCenterï¿½ï¿½"+childCenter +"  mCoveflowCenter:"+mCoveflowCenter);
         final int childWidth = child.getWidth();
-        //Ðý×ª½Ç¶È
+        //ï¿½ï¿½×ªï¿½Ç¶ï¿½
         int rotationAngle = 0;
-        //ÖØÖÃ×ª»»×´Ì¬
+        //ï¿½ï¿½ï¿½ï¿½×ªï¿½ï¿½×´Ì¬
         t.clear();
-        //ÉèÖÃ×ª»»ÀàÐÍ
+        //ï¿½ï¿½ï¿½ï¿½×ªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         t.setTransformationType(Transformation.TYPE_MATRIX);
-        //Èç¹ûÍ¼Æ¬Î»ÓÚÖÐÐÄÎ»ÖÃ²»ÐèÒª½øÐÐÐý×ª
+        //ï¿½ï¿½ï¿½Í¼Æ¬Î»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î»ï¿½Ã²ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×ª
         if (childCenter == mCoveflowCenter) {
-            klilog.i("center");
+            klilog.info("center");
             transformImageBitmap((ImageView) child, t, 0);
         } else {
-            //¸ù¾ÝÍ¼Æ¬ÔÚgalleryÖÐµÄÎ»ÖÃÀ´¼ÆËãÍ¼Æ¬µÄÐý×ª½Ç¶È
+            //ï¿½ï¿½ï¿½Í¼Æ¬ï¿½ï¿½galleryï¿½Ðµï¿½Î»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¼Æ¬ï¿½ï¿½ï¿½ï¿½×ªï¿½Ç¶ï¿½
             rotationAngle = (int) (((float) (mCoveflowCenter - childCenter) / childWidth) * mMaxRotationAngle);
             System.out.println("rotationAngle:" +rotationAngle);
-            //Èç¹ûÐý×ª½Ç¶È¾ø¶ÔÖµ´óÓÚ×î´óÐý×ª½Ç¶È·µ»Ø£¨-mMaxRotationAngle»òmMaxRotationAngle;£©
+            //ï¿½ï¿½ï¿½ï¿½ï¿½×ªï¿½Ç¶È¾ï¿½ï¿½Öµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×ªï¿½Ç¶È·ï¿½ï¿½Ø£ï¿½-mMaxRotationAngleï¿½ï¿½mMaxRotationAngle;ï¿½ï¿½
             if (Math.abs(rotationAngle) > mMaxRotationAngle) {
                 rotationAngle = (rotationAngle < 0) ? -mMaxRotationAngle : mMaxRotationAngle;
             }
@@ -85,27 +85,27 @@ public class GalleryFlow extends Gallery {
     }
     private void transformImageBitmap(ImageView child, Transformation t,
                     int rotationAngle) {
-        //¶ÔÐ§¹û½øÐÐ±£´æ
+        //ï¿½ï¿½Ð§ï¿½ï¿½ï¿½ï¿½Ð±ï¿½ï¿½ï¿½
         mCamera.save();
         final Matrix imageMatrix = t.getMatrix();
-        //Í¼Æ¬¸ß¶È
+        //Í¼Æ¬ï¿½ß¶ï¿½
         final int imageHeight = child.getLayoutParams().height;
-        //Í¼Æ¬¿í¶È
+        //Í¼Æ¬ï¿½ï¿½ï¿½
         final int imageWidth = child.getLayoutParams().width;
         
-        //·µ»ØÐý×ª½Ç¶ÈµÄ¾ø¶ÔÖµ
+        //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×ªï¿½Ç¶ÈµÄ¾ï¿½ï¿½Öµ
         final int rotation = Math.abs(rotationAngle);
         
-        // ÔÚZÖáÉÏÕýÏòÒÆ¶¯cameraµÄÊÓ½Ç£¬Êµ¼ÊÐ§¹ûÎª·Å´óÍ¼Æ¬¡£
-        // Èç¹ûÔÚYÖáÉÏÒÆ¶¯£¬ÔòÍ¼Æ¬ÉÏÏÂÒÆ¶¯£»XÖáÉÏ¶ÔÓ¦Í¼Æ¬×óÓÒÒÆ¶¯¡£
+        // ï¿½ï¿½Zï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ¶ï¿½cameraï¿½ï¿½ï¿½Ó½Ç£ï¿½Êµï¿½ï¿½Ð§ï¿½ï¿½Îªï¿½Å´ï¿½Í¼Æ¬ï¿½ï¿½
+        // ï¿½ï¿½ï¿½ï¿½ï¿½Yï¿½ï¿½ï¿½ï¿½ï¿½Æ¶ï¿½ï¿½ï¿½ï¿½ï¿½Í¼Æ¬ï¿½ï¿½ï¿½ï¿½ï¿½Æ¶ï¿½ï¿½ï¿½Xï¿½ï¿½ï¿½Ï¶ï¿½Ó¦Í¼Æ¬ï¿½ï¿½ï¿½ï¿½ï¿½Æ¶ï¿½ï¿½ï¿½
         mCamera.translate(0.0f, 0.0f, 100.0f);
         // As the angle of the view gets less, zoom in
         if (rotation < mMaxRotationAngle) {
             float zoomAmount = (float) (mMaxZoom + (rotation * 1.5));
             mCamera.translate(0.0f, 0.0f, zoomAmount);
         }
-        // ÔÚYÖáÉÏÐý×ª£¬¶ÔÓ¦Í¼Æ¬ÊúÏòÏòÀï·­×ª¡£
-        // Èç¹ûÔÚXÖáÉÏÐý×ª£¬Ôò¶ÔÓ¦Í¼Æ¬ºáÏòÏòÀï·­×ª¡£
+        // ï¿½ï¿½Yï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×ªï¿½ï¿½ï¿½ï¿½Ó¦Í¼Æ¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï·­×ªï¿½ï¿½
+        // ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×ªï¿½ï¿½ï¿½ï¿½ï¿½Ó¦Í¼Æ¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï·­×ªï¿½ï¿½
         mCamera.rotateY(rotationAngle);
         mCamera.getMatrix(imageMatrix);
         imageMatrix.preTranslate(-(imageWidth / 2), -(imageHeight / 2));

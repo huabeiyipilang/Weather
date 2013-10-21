@@ -40,7 +40,7 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
 	public boolean onPreferenceChange(Preference pref, Object obj) {
 		if(pref.getKey().equals(KEY_UPDATE_FREQUENCY)){
 			int hour = Integer.valueOf(String.valueOf(obj));
-			klilog.i("select hour:"+hour);
+			klilog.info("select hour:"+hour);
 			if(hour != 0){
 				EngineManager.getInstance(this).setUpdateDuring(hour);
 				mUpdateFreqPref.setSummary(getString(R.string.current_update_frequency,
