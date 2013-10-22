@@ -99,7 +99,7 @@ public class CitySelectActivity extends Activity implements OnItemClickListener 
 			//this means the city unit
 			EngineManager.getInstance(this).setDefaultMarkCity(city);
 			if(!mFromSetting){
-				Intent intent = new Intent(this, WeatherDisplay.class);
+				Intent intent = new Intent(this, MainActivity.class);
 				startActivity(intent);
 			}
 			finish();
