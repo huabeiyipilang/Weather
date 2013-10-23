@@ -17,11 +17,24 @@ public class BaseFragment extends SherlockFragment {
 		return mRoot;
 	}
 	
+	
+	
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+		onInitViews();
+	}
+
+
 	protected int onContentInflate(){
 		return 0;
 	}
 	
 	protected View findViewById(int res){
 		return mRoot.findViewById(res);
+	}
+	
+	protected void onInitViews(){
+		
 	}
 }

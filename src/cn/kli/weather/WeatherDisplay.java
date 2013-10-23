@@ -59,7 +59,7 @@ public class WeatherDisplay extends Activity implements OnClickListener,
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
-	    setContentView(R.layout.weather_details);
+	    setContentView(R.layout.fragment_weather_display);
 
 	    mFreshAnim = AnimationUtils.loadAnimation(this, R.anim.fresh_anim);
 	    mFreshAnim.setRepeatCount(Animation.INFINITE);

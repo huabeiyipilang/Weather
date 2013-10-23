@@ -63,17 +63,11 @@ public class WeatherDisplayFragment extends BaseFragment implements OnClickListe
 
 	@Override
 	protected int onContentInflate() {
-		return R.layout.weather_details;
+		return R.layout.fragment_weather_display;
 	}
 
-	
 	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-		initView();
-	}
-
-	private void initView(){
+	protected void onInitViews() {
 		mFreshAnim = AnimationUtils.loadAnimation(this.getActivity(), R.anim.fresh_anim);
 	    mFreshAnim.setRepeatCount(Animation.INFINITE);
 	    mPbFreshing = (ProgressBar)findViewById(R.id.pb_freshing);
@@ -87,8 +81,7 @@ public class WeatherDisplayFragment extends BaseFragment implements OnClickListe
 	    
 	    findViewById(R.id.ib_settings).setOnClickListener(this);
 	}
-	
-	
+
 	@Override
 	public void onResume() {
 		super.onResume();
