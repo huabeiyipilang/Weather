@@ -18,13 +18,12 @@ public class BaseFragment extends SherlockFragment {
 	}
 	
 	
-	
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		onInitViews();
 	}
-
+	
 
 	protected int onContentInflate(){
 		return 0;

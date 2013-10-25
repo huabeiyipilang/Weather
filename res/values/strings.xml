@@ -81,4 +81,8 @@
     <string name="error">error</string>
     <string name="weather_to"> to </string>
     <string name="no_weather_data">No weather data</string>
+    
+    <!-- setting fragment -->
+    <string name="menu_weather">天气</string>
+    <string name="menu_setting">设置</string>
 </resources>
