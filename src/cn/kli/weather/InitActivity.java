@@ -1,6 +1,7 @@
 package cn.kli.weather;
 
 import cn.kli.utils.klilog;
+import cn.kli.weather.engine.WeatherEngine;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,7 +12,7 @@ public class InitActivity extends Activity {
 	private final static int MSG_INIT = 0;
 	klilog log = new klilog(InitActivity.class);
 	
-	private EngineManager mManager;
+	private WeatherEngine mManager;
 	
 	private Handler mHandler = new Handler(){
 
@@ -48,7 +49,7 @@ public class InitActivity extends Activity {
 	protected void onResume() {
 		super.onResume();
 		klilog.info("onResume");
-		mManager = EngineManager.getInstance(this);
+		mManager = WeatherEngine.getInstance(this);
 		mManager.init(mHandler.obtainMessage(MSG_INIT));
 	}
 

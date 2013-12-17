@@ -1,6 +1,8 @@
 package cn.kli.weather;
 
 import cn.kli.utils.klilog;
+import cn.kli.weather.engine.UpdateAlarmManager;
+import cn.kli.weather.engine.WeatherEngine;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
@@ -14,7 +16,8 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
 	
 	private ListPreference mUpdateFreqPref;
 	private Preference mSelectCityPref;
-	private EngineManager mEngine;
+	private WeatherEngine mEngine;
+	private UpdateAlarmManager mAlarmManager;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -23,7 +26,8 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
 		mSelectCityPref = (Preference)findPreference(KEY_SELECT_CITY);
 		mUpdateFreqPref = (ListPreference)findPreference(KEY_UPDATE_FREQUENCY);
 		mUpdateFreqPref.setOnPreferenceChangeListener(this);
-		mEngine = EngineManager.getInstance(this);
+		mEngine = WeatherEngine.getInstance(this);
+		mAlarmManager = UpdateAlarmManager.getInstance(this);
 	}
 	
 	
@@ -32,7 +36,7 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
 		super.onResume();
 		mSelectCityPref.setSummary(getString(R.string.current_city, mEngine.getDefaultMarkCity().name));
 		mUpdateFreqPref.setSummary(getString(R.string.current_update_frequency, 
-				mEngine.getUpdateDuringHour()));
+		        mAlarmManager.getUpdateDuring()));
 	}
 
 
@@ -42,9 +46,9 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
 			int hour = Integer.valueOf(String.valueOf(obj));
 			klilog.info("select hour:"+hour);
 			if(hour != 0){
-				EngineManager.getInstance(this).setUpdateDuring(hour);
+			    mAlarmManager.setUpdateDuring(hour);
 				mUpdateFreqPref.setSummary(getString(R.string.current_update_frequency,
-						mEngine.getUpdateDuringHour()));
+				        mAlarmManager.getUpdateDuring()));
 			}
 		}
 		return true;

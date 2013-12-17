@@ -1,5 +1,7 @@
 package cn.kli.weather.display;
 
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -17,14 +19,14 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import cn.kli.weather.Config;
-import cn.kli.weather.EngineManager;
 import cn.kli.weather.SettingsActivity;
 import cn.kli.weather.WeatherPreviewView;
-import cn.kli.weather.EngineManager.DataChangedListener;
 import cn.kli.weather.R;
 import cn.kli.weather.base.BaseFragment;
 import cn.kli.weather.engine.City;
 import cn.kli.weather.engine.Weather;
+import cn.kli.weather.engine.WeatherEngine;
+import cn.kli.weather.engine.WeatherEngine.DataChangedListener;
 
 public class WeatherDisplayFragment extends BaseFragment implements OnClickListener, DataChangedListener {
 
@@ -32,7 +34,7 @@ public class WeatherDisplayFragment extends BaseFragment implements OnClickListe
 	private final static int MSG_FRESH_ANIM_START = 2;
 	private final static int MSG_FRESH_ANIM_STOP = 3;
 	
-	private EngineManager mEngine;
+	private WeatherEngine mEngine;
 	private ImageButton mIbFresh;
 	private ProgressBar mPbFreshing;
 
@@ -76,7 +78,7 @@ public class WeatherDisplayFragment extends BaseFragment implements OnClickListe
 	    mIbFresh.setOnClickListener(this);
 	    
 	    //prepared
-	    mEngine = EngineManager.getInstance(this.getActivity());
+	    mEngine = WeatherEngine.getInstance(this.getActivity());
 	    mEngine.register(this);
 	    
 	    findViewById(R.id.ib_settings).setOnClickListener(this);
@@ -92,10 +94,11 @@ public class WeatherDisplayFragment extends BaseFragment implements OnClickListe
 	    	msg.obj = city;
 	    	msg.sendToTarget();
 	    }else if(!mEngine.isRequesting()){
-	    	mEngine.getWeatherByIndex(city.index);
+	    	mEngine.requestWeatherByIndex(city.index, null);
 	    }
 	    if(this.getActivity().getIntent().getBooleanExtra("notification", false)){
-		    mEngine.clearWeahterNotif();
+            NotificationManager notifManager = (NotificationManager)this.getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
+            notifManager.cancelAll();
 	    }
 	}
 
@@ -104,7 +107,7 @@ public class WeatherDisplayFragment extends BaseFragment implements OnClickListe
 		switch(view.getId()){
 		case R.id.ib_fresh:
 		    City city = mEngine.getDefaultMarkCity();
-	    	mEngine.getWeatherByIndex(city.index);
+            mEngine.requestWeatherByIndex(city.index, null);
 			break;
 		case R.id.ib_settings:
 			Intent intent = new Intent(this.getActivity(), SettingsActivity.class);

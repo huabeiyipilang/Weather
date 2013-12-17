@@ -18,9 +18,7 @@ import android.widget.RemoteViews;
 
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 public class WidgetProvider extends AppWidgetProvider {
-	private final static String ACTION_UPDATE_TIME = "cn.kli.weatherwidget.update_time";
-	public final static String ACTION_UPDATE_SKIN = "cn.kli.weatherwidget.update_skin";
-	
+    
 	private PendingIntent mFreshIntent;
 	
 	@Override
@@ -37,18 +35,18 @@ public class WidgetProvider extends AppWidgetProvider {
 		klilog.info("onReceive");
 		String action = intent.getAction();
 		klilog.info("WidgetProvider received:"+action);
-		if(ACTION_UPDATE_TIME.equals(action)){
+		if(WidgetManager.ACTION_UPDATE_TIME.equals(action)){
 			updateAll(context);
-		}else if(EngineManager.ACTION_FRESH_WIDGET.equals(action)){
+		}else if(WidgetManager.ACTION_FRESH_WIDGET.equals(action)){
 			updateWidgetWeather(context, intent.getExtras());
-		}else if(ACTION_UPDATE_SKIN.equals(action)){
+		}else if(WidgetManager.ACTION_UPDATE_SKIN.equals(action)){
 			updateAll(context);
 		}
 	}
 	
 	private void updateAll(Context context){
 		updateWidgetTime(context);
-		EngineManager.getInstance(context).updateWidget();
+		WidgetManager.getInstance(context).updateWidget();
 	}
 	
 
@@ -72,7 +70,7 @@ public class WidgetProvider extends AppWidgetProvider {
 			int[] appWidgetIds) {
 		super.onUpdate(context, appWidgetManager, appWidgetIds);
 		klilog.info("onUpdate");
-		EngineManager.getInstance(context).updateWidget();
+		WidgetManager.getInstance(context).updateWidget();
 		updateWidgetTime(context);
 	}
 	
@@ -136,7 +134,7 @@ public class WidgetProvider extends AppWidgetProvider {
 	}
 	
 	private PendingIntent getUpdateTimePendingIntent(Context context){
-		Intent intent = new Intent(ACTION_UPDATE_TIME);
+		Intent intent = new Intent(WidgetManager.ACTION_UPDATE_TIME);
 		return  PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
 	}
 	

@@ -1,6 +1,7 @@
 package cn.kli.weather;
 
 import android.app.Activity;
+import android.app.NotificationManager;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -15,9 +16,10 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-import cn.kli.weather.EngineManager.DataChangedListener;
 import cn.kli.weather.engine.City;
 import cn.kli.weather.engine.Weather;
+import cn.kli.weather.engine.WeatherEngine;
+import cn.kli.weather.engine.WeatherEngine.DataChangedListener;
 
 public class WeatherDisplay extends Activity implements OnClickListener,
  			DataChangedListener{
@@ -26,7 +28,7 @@ public class WeatherDisplay extends Activity implements OnClickListener,
 	private final static int MSG_FRESH_ANIM_START = 2;
 	private final static int MSG_FRESH_ANIM_STOP = 3;
 	
-	private EngineManager mEngine;
+	private WeatherEngine mEngine;
 	private ImageButton mIbFresh;
 	private ProgressBar mPbFreshing;
 
@@ -69,7 +71,7 @@ public class WeatherDisplay extends Activity implements OnClickListener,
 	    mIbFresh.setOnClickListener(this);
 	    
 	    //prepared
-	    mEngine = EngineManager.getInstance(this);
+	    mEngine = WeatherEngine.getInstance(this);
 	    mEngine.register(this);
 	    
 		findViewById(R.id.ib_settings).setOnClickListener(this);
@@ -87,10 +89,11 @@ public class WeatherDisplay extends Activity implements OnClickListener,
 	    	msg.obj = city;
 	    	msg.sendToTarget();
 	    }else if(!mEngine.isRequesting()){
-	    	mEngine.getWeatherByIndex(city.index);
+	    	mEngine.requestWeatherByIndex(city.index, null);
 	    }
 	    if(getIntent().getBooleanExtra("notification", false)){
-		    mEngine.clearWeahterNotif();
+	        NotificationManager notifManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
+	        notifManager.cancelAll();
 	    }
 	}
 
@@ -136,7 +139,7 @@ public class WeatherDisplay extends Activity implements OnClickListener,
 		switch(view.getId()){
 		case R.id.ib_fresh:
 		    City city = mEngine.getDefaultMarkCity();
-	    	mEngine.getWeatherByIndex(city.index);
+	    	mEngine.requestWeatherByIndex(city.index, null);
 			break;
 		case R.id.ib_settings:
 			Intent intent = new Intent(this, SettingsActivity.class);

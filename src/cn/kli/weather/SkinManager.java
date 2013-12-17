@@ -76,7 +76,7 @@ public class SkinManager {
 		editor.commit();
 		
 		//notify widget
-		Intent intent = new Intent(WidgetProvider.ACTION_UPDATE_SKIN);
+		Intent intent = new Intent(WidgetManager.ACTION_UPDATE_SKIN);
 		mContext.sendBroadcast(intent);
 	}
 	

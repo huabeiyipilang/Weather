@@ -5,9 +5,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
-import cn.kli.weather.EngineManager;
 import cn.kli.weather.R;
 import cn.kli.weather.base.BaseFragment;
+import cn.kli.weather.engine.UpdateAlarmManager;
+import cn.kli.weather.engine.WeatherEngine;
 
 public class SettingsFragment extends BaseFragment {
 	
@@ -15,7 +16,8 @@ public class SettingsFragment extends BaseFragment {
 		CITY_SELECT, FRESH_DURING
 	}
 
-	private EngineManager mEngine;
+	private WeatherEngine mEngine;
+	private UpdateAlarmManager mAlarmManager;
 	
 	@Override
 	protected int onContentInflate() {
@@ -24,8 +26,8 @@ public class SettingsFragment extends BaseFragment {
 
 	@Override
 	protected void onInitViews() {
-		mEngine = EngineManager.getInstance(this.getActivity());
-		
+		mEngine = WeatherEngine.getInstance(this.getActivity());
+		mAlarmManager = UpdateAlarmManager.getInstance(this.getActivity());
 	}
 	
 	private class SettingsAdapter extends BaseAdapter{
@@ -69,8 +71,7 @@ public class SettingsFragment extends BaseFragment {
 			break;
 		case FRESH_DURING:
 			res[0] = getString(R.string.settings_update_frequency);
-			res[1] = getString(R.string.current_update_frequency, 
-					mEngine.getUpdateDuringHour());
+			res[1] = getString(R.string.current_update_frequency, mAlarmManager.getUpdateDuring());
 			break;
 		}
 		return res;

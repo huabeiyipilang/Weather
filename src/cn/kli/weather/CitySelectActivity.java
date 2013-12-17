@@ -1,6 +1,6 @@
 package cn.kli.weather;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import android.app.Activity;
@@ -12,7 +12,6 @@ import android.os.Message;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -24,19 +23,21 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import cn.kli.utils.klilog;
 import cn.kli.weather.engine.City;
+import cn.kli.weather.engine.WeatherEngine;
 
 public class CitySelectActivity extends Activity implements OnItemClickListener {
 	private final static int MSG_ENGINE_CHANGED = 1;
+    private final static int MSG_UPDATE_LIST = 2;
 
 	//views
 	private TextView mTvCityNav;
 	private ListView mLvCityList;
 	private Spinner mSpSourceList;
 	
-	private List<City> mCityTree = new ArrayList<City>();
+	private LinkedList<City> mCityTree = new LinkedList<City>();
 	private List<City> mCurrentList;
 	
-	private EngineManager mEngine;
+	private WeatherEngine mEngine;
 	
 	private boolean mFromSetting;
 	
@@ -47,10 +48,38 @@ public class CitySelectActivity extends Activity implements OnItemClickListener 
 			super.handleMessage(msg);
 			switch (msg.what) {
 			case MSG_ENGINE_CHANGED:
-				mCityTree = new ArrayList<City>();
+				mCityTree = new LinkedList<City>();
 				mTvCityNav.setText("");
 				initFinished();
 				break;
+			case MSG_UPDATE_LIST:        
+			    mCurrentList = (List<City>)msg.obj;
+			    City city = mCityTree.peek();
+		        if(mCurrentList.size() == 0 && city != null){
+		            //this means the city unit
+		            mEngine.setDefaultMarkCity(city);
+		            if(!mFromSetting){
+		                Intent intent = new Intent(CitySelectActivity.this, MainActivity.class);
+		                startActivity(intent);
+		            }
+		            finish();
+		        }
+
+		        //fresh list view
+		        klilog.info("mCurrentList.size() = "+mCurrentList.size());
+		        CityListAdapter adapter = new CityListAdapter(CitySelectActivity.this, mCurrentList);
+		        mLvCityList.setAdapter(adapter);
+		        
+		        //fresh navigation view
+		        String nav = "";
+		        if(mCityTree.size() >= 1){
+		            for(City _city : mCityTree){
+		                nav += "/"+_city.name;
+		            }
+		        }
+		        mTvCityNav.setText(nav);
+		        
+			    break;
 			}
 		}
 		
@@ -61,7 +90,7 @@ public class CitySelectActivity extends Activity implements OnItemClickListener 
 	    super.onCreate(savedInstanceState);
 		setContentView(R.layout.acitvity_city_select);
 		mFromSetting = getIntent().getBooleanExtra("fromSetting", true);
-		mEngine = EngineManager.getInstance(this);
+		mEngine = WeatherEngine.getInstance(this);
 		mTvCityNav = (TextView)findViewById(R.id.tv_city_navigation);
 		mLvCityList = (ListView)findViewById(R.id.lv_city_list);
 		mLvCityList.setOnItemClickListener(this);
@@ -93,32 +122,7 @@ public class CitySelectActivity extends Activity implements OnItemClickListener 
 	
 	private void freshListByCity(City city){
 		//get data
-		mCurrentList = mEngine.getCityList(city);
-		
-		if(mCurrentList.size() == 0 && city != null){
-			//this means the city unit
-			EngineManager.getInstance(this).setDefaultMarkCity(city);
-			if(!mFromSetting){
-				Intent intent = new Intent(this, MainActivity.class);
-				startActivity(intent);
-			}
-			finish();
-		}
-
-		//fresh list view
-		klilog.info("mCurrentList.size() = "+mCurrentList.size());
-		CityListAdapter adapter = new CityListAdapter(this, mCurrentList);
-		mLvCityList.setAdapter(adapter);
-		
-		//fresh navigation view
-		String nav = "";
-		if(mCityTree.size() >= 1){
-			for(City _city : mCityTree){
-				nav += "/"+_city.name;
-			}
-		}
-		mTvCityNav.setText(nav);
-		
+		mEngine.requestCityListByCity(city, mHandler.obtainMessage(MSG_UPDATE_LIST));
 	}
 	
 	private class CityListAdapter extends BaseAdapter{
@@ -164,23 +168,12 @@ public class CitySelectActivity extends Activity implements OnItemClickListener 
 	public void onItemClick(AdapterView<?> arg0, View arg1, int pos, long arg3) {
 		klilog.info("onItemClick pos = " + pos);
 		City city = mCurrentList.get(pos);
-		mCityTree.add(city);
+		mCityTree.push(city);
 		freshListByCity(city);
 	}
 	
 	private void backToUpLevel(){
-		int lastIndex = mCityTree.size() - 1;
-		if(lastIndex < 0){
-			return;
-		}
-		int toIndex = lastIndex - 1;
-		City toCity = null;
-		try {
-			toCity = mCityTree.get(toIndex);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		mCityTree.remove(mCityTree.get(lastIndex));
+		City toCity = mCityTree.pollFirst();
 		freshListByCity(toCity);
 	}
 
