@@ -1,7 +1,9 @@
-package cn.kli.weather;
+package cn.kli.weather.widget;
 
 import android.content.Context;
 import android.content.Intent;
+import cn.kli.weather.R;
+import cn.kli.weather.R.string;
 import cn.kli.weather.engine.City;
 import cn.kli.weather.engine.Weather;
 import cn.kli.weather.engine.WeatherEngine;

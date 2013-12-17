@@ -19,7 +19,7 @@
         android:key="select_style"
         android:title="@string/settings_style" >
         <intent
-            android:targetClass="cn.kli.weather.StyleChooseActivity"
+            android:targetClass="cn.kli.weather.theme.StyleChooseActivity"
             android:targetPackage="cn.kli.weather" />
     </Preference>
     

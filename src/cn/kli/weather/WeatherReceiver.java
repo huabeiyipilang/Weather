@@ -1,6 +1,7 @@
 package cn.kli.weather;
 
 import cn.kli.utils.klilog;
+import cn.kli.weather.widget.WidgetManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
