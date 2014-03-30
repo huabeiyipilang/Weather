@@ -6,8 +6,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 import cn.kli.weather.R;
+import cn.kli.weather.UpdateAlarmManager;
 import cn.kli.weather.base.BaseFragment;
-import cn.kli.weather.engine.UpdateAlarmManager;
 import cn.kli.weather.engine.WeatherEngine;
 
 public class SettingsFragment extends BaseFragment {
@@ -67,7 +67,7 @@ public class SettingsFragment extends BaseFragment {
 		switch(item){
 		case CITY_SELECT:
 			res[0] = getString(R.string.settings_city_select);
-			res[1] = getString(R.string.current_city, mEngine.getDefaultMarkCity().name);
+			res[1] = getString(R.string.current_city, mEngine.getMarkCity().get(0).name);
 			break;
 		case FRESH_DURING:
 			res[0] = getString(R.string.settings_update_frequency);

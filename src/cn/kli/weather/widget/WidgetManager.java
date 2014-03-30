@@ -1,9 +1,10 @@
 package cn.kli.weather.widget;
 
+import java.util.List;
+
 import android.content.Context;
 import android.content.Intent;
 import cn.kli.weather.R;
-import cn.kli.weather.R.string;
 import cn.kli.weather.engine.City;
 import cn.kli.weather.engine.Weather;
 import cn.kli.weather.engine.WeatherEngine;
@@ -33,22 +34,24 @@ public class WidgetManager {
     }
     
     public void updateWidget(){
-        updateWidget(mEngine.getDefaultMarkCity());
+        List<City> cities = mEngine.getMarkCity();
+        if(cities != null && cities.size() > 0){
+            updateWidget(cities.get(0));
+        }
     }
     
     private void updateWidget(City city){
         Intent intent = new Intent(ACTION_FRESH_WIDGET);
-        if(city != null && city.weather != null){
+        if(city != null && city.weathers != null){
             String sheshidu = mContext.getString(R.string.sheshidu);
-            Weather weather = city.weather.get(0);
+            Weather weather = city.weathers.get(0);
             intent.putExtra("city", city.name);
             intent.putExtra("weather", WeatherUtils.getWeather(mContext, weather.weather));
             intent.putExtra("weather", weather.getWeatherName(mContext));
             intent.putExtra("current_temp", weather.currentTemp+sheshidu);
             intent.putExtra("max_temp", weather.maxTemp+sheshidu);
             intent.putExtra("min_temp", weather.minTemp+sheshidu);
-            intent.putExtra("icon", WeatherUtils.getDrawable(weather.weather));
-            intent.putExtra("icon", weather.getIcon());
+            intent.putExtra("icon", weather.weather[0]);
         }else{
 //          intent.putExtra("city", mContext.getString(R.string.unknown));
 //          intent.putExtra("weather", mContext.getString(R.string.unknown));

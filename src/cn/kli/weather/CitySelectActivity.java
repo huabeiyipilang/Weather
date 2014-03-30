@@ -57,7 +57,7 @@ public class CitySelectActivity extends Activity implements OnItemClickListener 
 			    City city = mCityTree.peek();
 		        if(mCurrentList.size() == 0 && city != null){
 		            //this means the city unit
-		            mEngine.setDefaultMarkCity(city);
+		            mEngine.markCity(city);
 		            if(!mFromSetting){
 		                Intent intent = new Intent(CitySelectActivity.this, MainActivity.class);
 		                startActivity(intent);
@@ -94,7 +94,7 @@ public class CitySelectActivity extends Activity implements OnItemClickListener 
 		mTvCityNav = (TextView)findViewById(R.id.tv_city_navigation);
 		mLvCityList = (ListView)findViewById(R.id.lv_city_list);
 		mLvCityList.setOnItemClickListener(this);
-		mSpSourceList = (Spinner)findViewById(R.id.sp_source_list);
+		/*mSpSourceList = (Spinner)findViewById(R.id.sp_source_list);
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
 				android.R.layout.simple_spinner_item, mEngine.getSourceList());
 		mSpSourceList.setAdapter(adapter);
@@ -111,7 +111,7 @@ public class CitySelectActivity extends Activity implements OnItemClickListener 
 				
 			}
 			
-		});
+		});*/
 		initFinished();
 	}
 

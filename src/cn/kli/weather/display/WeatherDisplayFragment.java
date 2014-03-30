@@ -24,11 +24,11 @@ import cn.kli.weather.WeatherPreviewView;
 import cn.kli.weather.R;
 import cn.kli.weather.base.BaseFragment;
 import cn.kli.weather.engine.City;
+import cn.kli.weather.engine.EngineListener;
 import cn.kli.weather.engine.Weather;
 import cn.kli.weather.engine.WeatherEngine;
-import cn.kli.weather.engine.WeatherEngine.DataChangedListener;
 
-public class WeatherDisplayFragment extends BaseFragment implements OnClickListener, DataChangedListener {
+public class WeatherDisplayFragment extends BaseFragment implements OnClickListener {
 
 	private final static int MSG_SHOW_WEATHER = 1;
 	private final static int MSG_FRESH_ANIM_START = 2;
@@ -40,6 +40,28 @@ public class WeatherDisplayFragment extends BaseFragment implements OnClickListe
 
 	private Animation mFreshAnim;
 	
+	private EngineListener mListener = new EngineListener(){
+
+        @Override
+        public void onWeatherChanged(City city) {
+            Message msg = mHandler.obtainMessage(MSG_SHOW_WEATHER);
+            msg.obj = city;
+            msg.sendToTarget();
+        }
+        
+        
+
+        @Override
+        protected void onRequestStateChanged(boolean isRequesting) {
+            if(isRequesting){
+                startFreshAnim();
+            }else{
+                stopFreshAnim();
+            }
+        }
+
+    };
+    
 	private Handler mHandler = new Handler(){
 
 		@Override
@@ -79,7 +101,7 @@ public class WeatherDisplayFragment extends BaseFragment implements OnClickListe
 	    
 	    //prepared
 	    mEngine = WeatherEngine.getInstance(this.getActivity());
-	    mEngine.register(this);
+	    mEngine.addListener(mListener);
 	    
 	    findViewById(R.id.ib_settings).setOnClickListener(this);
 	}
@@ -88,13 +110,13 @@ public class WeatherDisplayFragment extends BaseFragment implements OnClickListe
 	public void onResume() {
 		super.onResume();
 	    //get weather
-	    final City city = mEngine.getDefaultMarkCity();
-	    if(city.weather != null){
+	    final City city = mEngine.getMarkCity().get(0);
+	    if(city.weathers != null){
 	    	Message msg = mHandler.obtainMessage(MSG_SHOW_WEATHER);
 	    	msg.obj = city;
 	    	msg.sendToTarget();
 	    }else if(!mEngine.isRequesting()){
-	    	mEngine.requestWeatherByIndex(city.index, null);
+	    	mEngine.requestWeatherByCityIndex(city.index);
 	    }
 	    if(this.getActivity().getIntent().getBooleanExtra("notification", false)){
             NotificationManager notifManager = (NotificationManager)this.getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
@@ -106,8 +128,8 @@ public class WeatherDisplayFragment extends BaseFragment implements OnClickListe
 	public void onClick(View view) {
 		switch(view.getId()){
 		case R.id.ib_fresh:
-		    City city = mEngine.getDefaultMarkCity();
-            mEngine.requestWeatherByIndex(city.index, null);
+		    City city = mEngine.getMarkCity().get(0);
+            mEngine.requestWeatherByCityIndex(city.index);
 			break;
 		case R.id.ib_settings:
 			Intent intent = new Intent(this.getActivity(), SettingsActivity.class);
@@ -116,33 +138,15 @@ public class WeatherDisplayFragment extends BaseFragment implements OnClickListe
 		}
 	}
 
-	@Override
-	public void onWeatherChanged(City city) {
-    	Message msg = mHandler.obtainMessage(MSG_SHOW_WEATHER);
-    	msg.obj = city;
-    	msg.sendToTarget();
-	}
-
-	@Override
-	public void onStateChanged(boolean isRequesting) {
-		if(isRequesting){
-			startFreshAnim();
-		}else{
-			stopFreshAnim();
-		}
-	}
-
-
-
 	private void displayWeather(City city) {
-		if (city == null || city.weather == null) {
+		if (city == null || city.weathers == null) {
 			Toast.makeText(this.getActivity(), R.string.error, Toast.LENGTH_SHORT).show();
 			return;
 		}
 		
 		String degree = this.getString(R.string.sheshidu);
 		
-		Weather firstWeather = city.weather.get(0);
+		Weather firstWeather = city.weathers.get(0);
 		
 		//current weather
 		TextView cityName = (TextView)findViewById(R.id.tv_city_name);
@@ -153,7 +157,7 @@ public class WeatherDisplayFragment extends BaseFragment implements OnClickListe
 		currentTemp.setShadowLayer(2F, 2F,1F, Color.BLACK);
 		
 		TextView currentWeather = (TextView)findViewById(R.id.current_weather);
-		currentWeather.setText(firstWeather.getWeatherName(this.getActivity()));
+		currentWeather.setText(firstWeather.getFormatWeatherName(getActivity()));
 		currentWeather.setShadowLayer(2F, 2F,1F, Color.BLACK);
 
 		TextView currentWind = (TextView)findViewById(R.id.current_wind);
@@ -164,7 +168,7 @@ public class WeatherDisplayFragment extends BaseFragment implements OnClickListe
 		prvContainer.removeAllViews();
 		for(int i = 0; i < Config.getPrevCount(); i++){
 			WeatherPreviewView preview = new WeatherPreviewView(this.getActivity());
-			preview.setWeather(city.weather.get(i));
+			preview.setWeather(city.weathers.get(i));
 			prvContainer.addView(preview);
 		}
 	}

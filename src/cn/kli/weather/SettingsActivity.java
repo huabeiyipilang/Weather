@@ -1,7 +1,6 @@
 package cn.kli.weather;
 
 import cn.kli.utils.klilog;
-import cn.kli.weather.engine.UpdateAlarmManager;
 import cn.kli.weather.engine.WeatherEngine;
 import android.os.Bundle;
 import android.preference.ListPreference;
@@ -34,7 +33,7 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
 	@Override
 	protected void onResume() {
 		super.onResume();
-		mSelectCityPref.setSummary(getString(R.string.current_city, mEngine.getDefaultMarkCity().name));
+		mSelectCityPref.setSummary(getString(R.string.current_city, mEngine.getMarkCity().get(0).name));
 		mUpdateFreqPref.setSummary(getString(R.string.current_update_frequency, 
 		        mAlarmManager.getUpdateDuring()));
 	}

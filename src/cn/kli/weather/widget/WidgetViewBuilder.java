@@ -4,16 +4,18 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-import cn.kli.weather.R;
-import cn.kli.weather.R.array;
-import cn.kli.weather.R.string;
-import cn.kli.weather.theme.Skin;
-
 import android.content.Context;
+import android.graphics.Picture;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.RemoteViews;
+import cn.kli.weather.R;
+import cn.kli.weather.theme.Skin;
+
+import com.larvalabs.svgandroid.SVG;
+import com.larvalabs.svgandroid.SVGParser;
 
 public class WidgetViewBuilder {
 	private final static boolean HOUR_24 = false;
@@ -83,6 +85,9 @@ public class WidgetViewBuilder {
 				mRv.setTextViewText(getId(Skin.id.tv_max), "/"+mWeatherData.getString("max_temp"));
 				int icon = mWeatherData.getInt("icon", 0);
 				if(icon != 0){
+				    SVG svg = SVGParser.getSVGFromResource(mContext.getResources(), icon);
+				    Picture picture = svg.getPicture();
+				    Drawable drawable = svg.createPictureDrawable();
 					BitmapDrawable bd = (BitmapDrawable)mContext.getResources().getDrawable(icon);
 					mRv.setImageViewBitmap(getId(Skin.id.iv_icon), bd.getBitmap());
 				}

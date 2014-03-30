@@ -59,9 +59,9 @@ public class WeatherPreviewView extends LinearLayout {
 		
 		tvDate.setText(sdf.format(weather.calendar.getTimeInMillis()));
 		
-		tvWeather.setText(weather.getWeatherName(mContext));
+		tvWeather.setText(weather.getFormatWeatherName(getContext()));
 		tvMaxTemp.setText(weather.maxTemp + degree);
 		tvMinTemp.setText(weather.minTemp + degree);
-		ivIcon.setImageResource(weather.getIcon());
+//		ivIcon.setImageResource(weather.getIcon());
 	}
 }

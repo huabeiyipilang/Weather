@@ -17,12 +17,11 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import cn.kli.weather.engine.City;
+import cn.kli.weather.engine.EngineListener;
 import cn.kli.weather.engine.Weather;
 import cn.kli.weather.engine.WeatherEngine;
-import cn.kli.weather.engine.WeatherEngine.DataChangedListener;
 
-public class WeatherDisplay extends Activity implements OnClickListener,
- 			DataChangedListener{
+public class WeatherDisplay extends Activity implements OnClickListener{
 	
 	private final static int MSG_SHOW_WEATHER = 1;
 	private final static int MSG_FRESH_ANIM_START = 2;
@@ -33,6 +32,28 @@ public class WeatherDisplay extends Activity implements OnClickListener,
 	private ProgressBar mPbFreshing;
 
 	private Animation mFreshAnim;
+	
+	private EngineListener mListener = new EngineListener(){
+
+	    @Override
+	    public void onWeatherChanged(City city) {
+	        Message msg = mHandler.obtainMessage(MSG_SHOW_WEATHER);
+	        msg.obj = city;
+	        msg.sendToTarget();
+	    }
+	    
+	    
+
+	    @Override
+        protected void onRequestStateChanged(boolean isRequesting) {
+            if(isRequesting){
+                startFreshAnim();
+            }else{
+                stopFreshAnim();
+            }
+        }
+
+	};
 	
 	private Handler mHandler = new Handler(){
 
@@ -72,7 +93,7 @@ public class WeatherDisplay extends Activity implements OnClickListener,
 	    
 	    //prepared
 	    mEngine = WeatherEngine.getInstance(this);
-	    mEngine.register(this);
+	    mEngine.addListener(mListener);
 	    
 		findViewById(R.id.ib_settings).setOnClickListener(this);
 	}
@@ -83,13 +104,13 @@ public class WeatherDisplay extends Activity implements OnClickListener,
 	protected void onResume() {
 		super.onResume();
 	    //get weather
-	    final City city = mEngine.getDefaultMarkCity();
-	    if(city.weather != null){
+	    final City city = mEngine.getMarkCity().get(0);
+	    if(city.weathers != null){
 	    	Message msg = mHandler.obtainMessage(MSG_SHOW_WEATHER);
 	    	msg.obj = city;
 	    	msg.sendToTarget();
 	    }else if(!mEngine.isRequesting()){
-	    	mEngine.requestWeatherByIndex(city.index, null);
+	    	mEngine.requestWeatherByCityIndex(city.index);
 	    }
 	    if(getIntent().getBooleanExtra("notification", false)){
 	        NotificationManager notifManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
@@ -100,14 +121,14 @@ public class WeatherDisplay extends Activity implements OnClickListener,
 
 
 	private void displayWeather(City city) {
-		if (city == null || city.weather == null) {
+		if (city == null || city.weathers == null) {
 			Toast.makeText(this, R.string.error, Toast.LENGTH_SHORT).show();
 			return;
 		}
 		
 		String degree = this.getString(R.string.sheshidu);
 		
-		Weather firstWeather = city.weather.get(0);
+		Weather firstWeather = city.weathers.get(0);
 		
 		//current weather
 		TextView cityName = (TextView)findViewById(R.id.tv_city_name);
@@ -118,7 +139,7 @@ public class WeatherDisplay extends Activity implements OnClickListener,
 		currentTemp.setShadowLayer(2F, 2F,1F, Color.BLACK);
 		
 		TextView currentWeather = (TextView)findViewById(R.id.current_weather);
-		currentWeather.setText(firstWeather.getWeatherName(this));
+		currentWeather.setText(firstWeather.getFormatWeatherName(this));
 		currentWeather.setShadowLayer(2F, 2F,1F, Color.BLACK);
 
 		TextView currentWind = (TextView)findViewById(R.id.current_wind);
@@ -129,7 +150,7 @@ public class WeatherDisplay extends Activity implements OnClickListener,
 		prvContainer.removeAllViews();
 		for(int i = 0; i < Config.getPrevCount(); i++){
 			WeatherPreviewView preview = new WeatherPreviewView(this);
-			preview.setWeather(city.weather.get(i));
+			preview.setWeather(city.weathers.get(i));
 			prvContainer.addView(preview);
 		}
 	}
@@ -138,8 +159,8 @@ public class WeatherDisplay extends Activity implements OnClickListener,
 	public void onClick(View view) {
 		switch(view.getId()){
 		case R.id.ib_fresh:
-		    City city = mEngine.getDefaultMarkCity();
-	    	mEngine.requestWeatherByIndex(city.index, null);
+		    City city = mEngine.getMarkCity().get(0);
+	    	mEngine.requestWeatherByCityIndex(city.index);
 			break;
 		case R.id.ib_settings:
 			Intent intent = new Intent(this, SettingsActivity.class);
@@ -154,21 +175,5 @@ public class WeatherDisplay extends Activity implements OnClickListener,
 	
 	private void stopFreshAnim(){
 		mHandler.sendEmptyMessage(MSG_FRESH_ANIM_STOP);
-	}
-
-	@Override
-	public void onWeatherChanged(City city) {
-    	Message msg = mHandler.obtainMessage(MSG_SHOW_WEATHER);
-    	msg.obj = city;
-    	msg.sendToTarget();
-	}
-
-	@Override
-	public void onStateChanged(boolean isRequesting) {
-		if(isRequesting){
-			startFreshAnim();
-		}else{
-			stopFreshAnim();
-		}
 	}
 }

@@ -1,12 +1,18 @@
 package cn.kli.weather;
 
-import cn.kli.utils.klilog;
-import cn.kli.weather.engine.WeatherEngine;
+import java.util.List;
+
+import weathersource.weathercomcn.SourceWeatherComCn;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import cn.kli.utils.klilog;
+import cn.kli.weather.engine.City;
+import cn.kli.weather.engine.EngineListener;
+import cn.kli.weather.engine.WeatherEngine;
 
 public class InitActivity extends Activity {
 	private final static int MSG_INIT = 0;
@@ -14,26 +20,26 @@ public class InitActivity extends Activity {
 	
 	private WeatherEngine mManager;
 	
-	private Handler mHandler = new Handler(){
+	private EngineListener mListener = new EngineListener(){
 
-		@Override
-		public void handleMessage(Message msg) {
-			super.handleMessage(msg);
-			switch(msg.what){
-			case MSG_INIT:
-				if(mManager.hasDefaultCity()){
-					translateTo(MainActivity.class, null);
-				}else{
-					Bundle bundle = new Bundle();
-					bundle.putBoolean("fromSetting", false);
-					translateTo(CitySelectActivity.class, bundle);
-				}
-				break;
-			}
-		}
-		
+        @Override
+        protected void onInited() {
+            List<City> markCities = mManager.getMarkCity();
+            if(markCities != null && markCities.size() > 0){
+                translateTo(MainActivity.class, null);
+            }else{
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("fromSetting", false);
+                translateTo(CitySelectActivity.class, bundle);
+            }
+        }
+
+        @Override
+        protected void onError(int errorCode) {
+            klilog.error("weather engine init error:"+errorCode);
+        }
+	    
 	};
-	
 	
 	
 	@Override
@@ -50,7 +56,8 @@ public class InitActivity extends Activity {
 		super.onResume();
 		klilog.info("onResume");
 		mManager = WeatherEngine.getInstance(this);
-		mManager.init(mHandler.obtainMessage(MSG_INIT));
+		mManager.addListener(mListener);
+		mManager.init(new SourceWeatherComCn(getApplicationContext()));
 	}
 
 	private void translateTo(Class<? extends Activity> cls, Bundle bundle){
@@ -63,5 +70,11 @@ public class InitActivity extends Activity {
 		this.startActivity(intent);
 		finish();
 	}
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mManager.removeListener(mListener);
+    }
 
 }
