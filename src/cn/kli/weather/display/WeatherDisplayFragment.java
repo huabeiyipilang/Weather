@@ -140,7 +140,9 @@ public class WeatherDisplayFragment extends BaseFragment implements OnClickListe
 
 	private void displayWeather(City city) {
 		if (city == null || city.weathers == null) {
-			Toast.makeText(this.getActivity(), R.string.error, Toast.LENGTH_SHORT).show();
+		    if(getActivity() != null){
+	            Toast.makeText(this.getActivity(), R.string.error, Toast.LENGTH_SHORT).show();
+		    }
 			return;
 		}
 		
